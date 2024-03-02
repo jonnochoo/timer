@@ -1,20 +1,23 @@
 <template>
     <div class="container mx-auto">
         <div class="m-8 flex justify-center">
-            <button class="btn-primary" @click="startTimer(60)">
+            <button class="btn-primary" @click="timer.start(60)">
                 60 minutes
             </button>
-            <button class="btn-primary" @click="startTimer(40)">
+            <button class="btn-primary" @click="timer.start(40)">
                 40 minutes
             </button>
-            <button class="btn-primary" @click="startTimer(20)">
+            <button class="btn-primary" @click="timer.start(20)">
                 20 minutes
             </button>
-            <button class="btn-primary" @click="startTimer(10)">
+            <button class="btn-primary" @click="timer.start(10)">
                 10 minutes
             </button>
-            <button class="btn-primary" @click="startTimer(5)">
+            <button class="btn-primary" @click="timer.start(5)">
                 5 minutes
+            </button>
+            <button class="btn-primary" @click="timer.start(0, 5)">
+                5 seconds
             </button>
         </div>
 
@@ -27,33 +30,43 @@
 <script lang="ts" setup>
 import '~/assets/main.css'
 
-import { intervalToDuration, addMinutes } from 'date-fns'
+import { intervalToDuration, addMinutes, addSeconds } from 'date-fns'
 
 const timer = reactive({
     minutes: 0,
-    display: '',
+    seconds: 0,
+    display: '00:00:00',
     timestamp: new Date(),
-    set: function (min: number) {
-        this.minutes = min
+    setIntervalId: null as Timeout,
+    start: function (minutes: number, seconds: number = 0) {
+        this.minutes = minutes
+        this.seconds = seconds
         this.timestamp = new Date()
+        this.update()
+        this.setIntervalId = setInterval(() => {
+            this.update()
+        }, 1000)
     },
     update: function () {
+        const start = new Date()
+        const end = addSeconds(
+            addMinutes(timer.timestamp, this.minutes),
+            this.seconds
+        )
+        if (start > end) {
+            console.log('done', this.setIntervalId)
+            clearInterval(this.setIntervalId)
+            return
+        }
+
         let duration = intervalToDuration({
-            end: addMinutes(timer.timestamp, this.minutes),
-            start: new Date(),
+            end: end,
+            start: start,
         })
-        const hour = duration.hours ?? '00'
-        const minutes = duration.minutes ?? '00'
-        const seconds = duration.seconds ?? '00'
+        const hour = (duration.hours?.toString() ?? '00').padStart(2, '0')
+        const minutes = (duration.minutes?.toString() ?? '00').padStart(2, '0')
+        const seconds = (duration.seconds?.toString() ?? '00').padStart(2, '0')
         this.display = `${hour}:${minutes}:${seconds}`
     },
 })
-
-const startTimer = (minutes: number) => {
-    timer.set(minutes)
-    timer.update()
-    setInterval(() => {
-        timer.update()
-    }, 1000)
-}
 </script>
