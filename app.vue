@@ -1,22 +1,22 @@
 <template>
     <div class="container mx-auto">
         <div class="m-8 flex justify-center">
-            <button class="btn-primary" @click="timer.start(0, 60)">
+            <button class="btn btn-primary" @click="timer.start(0, 60)">
                 60 minutes
             </button>
-            <button class="btn-primary" @click="timer.start(0, 40)">
+            <button class="btn btn-primary" @click="timer.start(0, 40)">
                 40 minutes
             </button>
-            <button class="btn-primary" @click="timer.start(0, 20)">
+            <button class="btn btn-primary" @click="timer.start(0, 20)">
                 20 minutes
             </button>
-            <button class="btn-primary" @click="timer.start(0, 10)">
+            <button class="btn btn-primary" @click="timer.start(0, 10)">
                 10 minutes
             </button>
-            <button class="btn-primary" @click="timer.start(0, 5)">
+            <button class="btn btn-primary" @click="timer.start(0, 5)">
                 5 minutes
             </button>
-            <button class="btn-primary" @click="timer.start(0, 0, 5)">
+            <button class="btn btn-primary" @click="timer.start(0, 0, 5)">
                 5 seconds
             </button>
         </div>
@@ -26,7 +26,17 @@
         </div>
 
         <div class="mt-4 flex justify-center">
-            <button @click="timer.stop" class="btn-primary">Stop</button>
+            <button
+                v-if="timer.isRunning"
+                @click="timer.pause"
+                class="btn btn-secondary"
+            >
+                Pause
+            </button>
+            <button v-else @click="timer.resume" class="btn btn-secondary">
+                Resume
+            </button>
+            <button @click="timer.stop" class="btn btn-secondary">Stop</button>
         </div>
     </div>
 </template>
@@ -44,6 +54,8 @@ const timer = reactive({
     recordedSeconds: 0,
     display: '00:00:00',
     setIntervalId: null as Timeout,
+    isRunning: false,
+    isStarted: false,
     start: function (hours: number, minutes: number, seconds: number = 0) {
         this.audio = new Audio()
         this.audio.src = 'service-bell-ring-14610.mp3'
@@ -51,6 +63,8 @@ const timer = reactive({
 
         this.stop()
 
+        this.isRunning = true
+        this.isStarted = true
         this.hours = hours
         this.minutes = minutes
         this.seconds = seconds
@@ -62,12 +76,25 @@ const timer = reactive({
         })
     },
     stop: function () {
-        clearInterval(this.setIntervalId)
+        this.pause()
+        this.isStarted = false
         this.recordedSeconds = 0
         this.hours = 0
         this.minutes = 0
         this.seconds = 0
         this.display = '--:--:--'
+    },
+    pause: function () {
+        clearInterval(this.setIntervalId)
+        this.isRunning = false
+    },
+    resume: function () {
+        this.isRunning = true
+        setTimeout(() => {
+            this.setIntervalId = setInterval(() => {
+                this.update()
+            }, 1000)
+        })
     },
     update: function () {
         this.recordedSeconds++
