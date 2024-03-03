@@ -41,19 +41,20 @@ const timer = reactive({
     hours: 0,
     minutes: 0,
     seconds: 0,
+    recordedSeconds: 0,
     display: '00:00:00',
-    timestamp: new Date(),
     setIntervalId: null as Timeout,
     start: function (hours: number, minutes: number, seconds: number = 0) {
         this.audio = new Audio()
         this.audio.src = 'service-bell-ring-14610.mp3'
         this.audio.preload = 'auto'
 
+        this.stop()
+
         this.hours = hours
         this.minutes = minutes
         this.seconds = seconds
-        this.timestamp = new Date()
-        this.formatDisplay(hours, minutes, seconds)
+        this.formatDisplay(this.hours, this.minutes, this.seconds)
         setTimeout(() => {
             this.setIntervalId = setInterval(() => {
                 this.update()
@@ -62,23 +63,28 @@ const timer = reactive({
     },
     stop: function () {
         clearInterval(this.setIntervalId)
+        this.recordedSeconds = 0
         this.hours = 0
         this.minutes = 0
         this.seconds = 0
         this.display = '--:--:--'
     },
     update: function () {
-        const start = new Date()
+        this.recordedSeconds++
+        var currentDate = new Date()
+        const start = addSeconds(currentDate, this.recordedSeconds)
         const end = addSeconds(
-            addMinutes(timer.timestamp, this.minutes),
-            this.seconds
+            currentDate,
+            this.seconds + this.minutes * 60 + this.hours * 60
         )
-        if (start >= end) {
+
+        // Play the audio and clear the interval
+        if (start > end) {
             this.audio.play()
-            console.log('completed', this.setIntervalId)
             clearInterval(this.setIntervalId)
             return
         }
+
         let duration = intervalToDuration({
             end: end,
             start: start,
