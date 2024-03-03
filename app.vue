@@ -21,11 +21,11 @@
             </button>
         </div>
 
-        <div class="flex justify-center text-9xl font-extralight">
-            {{ timer.display }}
+        <div v-if="timer.isStarted" class="flex justify-center font-extralight">
+            <div class="text-8xl">{{ timer.fullDisplay }}</div>
         </div>
 
-        <div class="mt-4 flex justify-center">
+        <div v-if="timer.isStarted" class="mt-4 flex justify-center">
             <button
                 v-if="timer.isRunning"
                 @click="timer.pause"
@@ -53,6 +53,7 @@ const timer = reactive({
     seconds: 0,
     recordedSeconds: 0,
     display: '00:00:00',
+    fullDisplay: '',
     setIntervalId: null as Timeout,
     isRunning: false,
     isStarted: false,
@@ -68,12 +69,10 @@ const timer = reactive({
         this.hours = hours
         this.minutes = minutes
         this.seconds = seconds
+        this.setIntervalId = setInterval(() => {
+            this.update()
+        }, 1000)
         this.formatDisplay(this.hours, this.minutes, this.seconds)
-        setTimeout(() => {
-            this.setIntervalId = setInterval(() => {
-                this.update()
-            }, 1000)
-        })
     },
     stop: function () {
         this.pause()
@@ -119,10 +118,20 @@ const timer = reactive({
         this.formatDisplay(duration.hours, duration.minutes, duration.seconds)
     },
     formatDisplay(hours: number, minutes: number, seconds: number) {
-        const hour = (hours?.toString() ?? '00').padStart(2, '0')
-        const min = (minutes?.toString() ?? '00').padStart(2, '0')
-        const sec = (seconds?.toString() ?? '00').padStart(2, '0')
+        const hour = hours ?? 0
+        const min = minutes ?? 0
+        const sec = seconds ?? 0
         this.display = `${hour}:${min}:${sec}`
+        if (
+            (hours == 0 || hours == null) &&
+            (minutes == 0 || minutes == null)
+        ) {
+            this.fullDisplay = `${sec} seconds`
+        } else if (hours == 0 || hours == null) {
+            this.fullDisplay = `${min} minutes ${sec} seconds`
+        } else {
+            this.fullDisplay = `${hour} hours ${min} minutes ${sec} seconds`
+        }
     },
 })
 
