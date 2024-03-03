@@ -82,6 +82,7 @@ const timer = reactive({
         this.minutes = 0
         this.seconds = 0
         this.display = '--:--:--'
+        this.fullDisplay = ''
     },
     pause: function () {
         clearInterval(this.setIntervalId)
@@ -136,6 +137,6 @@ const timer = reactive({
 })
 
 useHead({
-    title: computed(() => timer.display),
+    title: computed(() => timer.fullDisplay),
 })
 </script>
