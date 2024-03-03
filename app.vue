@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto">
-        <div class="m-8 flex justify-center">
+        <div class="m-8 flex flex-col justify-center divide-y-4 lg:flex-row">
             <button class="btn btn-primary" @click="timer.start(0, 60)">
                 60 minutes
             </button>
@@ -16,13 +16,15 @@
             <button class="btn btn-primary" @click="timer.start(0, 5)">
                 5 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 0, 5)">
-                5 seconds
+            <button class="btn btn-primary" @click="timer.start(0, 1)">
+                1 minute
             </button>
         </div>
 
         <div v-if="timer.isStarted" class="flex justify-center font-extralight">
-            <div class="text-8xl">{{ timer.fullDisplay }}</div>
+            <div class="text-center text-8xl lg:text-left">
+                {{ timer.fullDisplay }}
+            </div>
         </div>
 
         <div v-if="timer.isStarted" class="mt-4 flex justify-center">
