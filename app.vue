@@ -3,25 +3,25 @@
         <div
             class="m-8 flex flex-col justify-center divide-y-4 lg:flex-row lg:divide-y-0"
         >
-            <button class="btn btn-primary" @click="timer.start(0, 60)">
+            <button class="btn-primary" @click="timer.start(0, 60)">
                 60 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 40)">
+            <button class="btn-primary" @click="timer.start(0, 40)">
                 40 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 30)">
+            <button class="btn-primary" @click="timer.start(0, 30)">
                 30 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 20)">
+            <button class="btn-primary" @click="timer.start(0, 20)">
                 20 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 10)">
+            <button class="btn-primary" @click="timer.start(0, 10)">
                 10 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 5)">
+            <button class="btn-primary" @click="timer.start(0, 5)">
                 5 minutes
             </button>
-            <button class="btn btn-primary" @click="timer.start(0, 1)">
+            <button class="btn-primary" @click="timer.start(0, 1)">
                 1 minute
             </button>
         </div>

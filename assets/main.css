@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  .btn {
+  button {
     @apply py-2 px-5  font-semibold rounded-md shadow-md hover:focus:outline-none  mr-2;
   }
   .btn-primary {
