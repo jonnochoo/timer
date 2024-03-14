@@ -66,7 +66,7 @@ const timer = reactive({
     isStarted: false,
     start: function (hours: number, minutes: number, seconds: number = 0) {
         this.audio = new Audio()
-        this.audio.src = 'service-bell-ring-14610.mp3'
+        this.audio.src = 'chime.mp3'
         this.audio.preload = 'auto'
 
         this.stop()
