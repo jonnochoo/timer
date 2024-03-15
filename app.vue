@@ -15,6 +15,9 @@
             <button class="btn-primary" @click="timer.start(0, 20)">
                 20 minutes
             </button>
+            <button class="btn-primary" @click="timer.start(0, 15)">
+                15 minutes
+            </button>
             <button class="btn-primary" @click="timer.start(0, 10)">
                 10 minutes
             </button>
@@ -24,6 +27,13 @@
             <button class="btn-primary" @click="timer.start(0, 1)">
                 1 minute
             </button>
+            <input
+                @keyup.enter="(e) => timer.start(0, e.target.value)"
+                class="rounded-md border-gray-300 p-2 text-center shadow-md"
+                type="number"
+                min="0"
+                max="100"
+            />
         </div>
 
         <div v-if="timer.isStarted" class="flex justify-center font-extralight">
